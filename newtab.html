@@ -67,6 +67,7 @@
             font-size: 1.5rem;
             color: var(--primary-color);
             letter-spacing: .2px;
+            margin-bottom: 8px;
         }
 
         .btn-container {
@@ -160,7 +161,8 @@
             font-weight: 700;
             color: var(--primary-color);
             font-size: .9rem;
-            background: white;;
+            background: white;
+            ;
         }
 
         .card .label {
@@ -306,7 +308,9 @@
             <input type="search" name="q" placeholder="Search the web…" autocomplete="on" />
             <div class="btn-container">
                 <button type="submit" aria-label="Search the web">Search</button>
+                <div style="border-right: 1px solid var(--secondary-color);opacity:.6;"></div>
                 <button id="shareFile" type="button" aria-label="Upload file">Upload a file</button>
+                <button id="shareScreen" type="button" aria-label="Share screen">Share Screen</button>
             </div>
         </form>
 
@@ -345,6 +349,11 @@
             });
             input.click();
         });
+
+    // Screenshare button
+    document.getElementById("shareScreen").addEventListener("click", () => {
+        browser.webfuseSession.startScreensharing();
+    });
 
 </script>
 

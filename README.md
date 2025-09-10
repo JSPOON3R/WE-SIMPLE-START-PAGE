@@ -1,6 +1,6 @@
 
 ## Short Description
-Sales Team demo extension
+A simple start page containing a company logo, bookmark icons, and a search bar
 
 ## Long Description
 Sales Team demo extension
