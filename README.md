@@ -3,7 +3,7 @@
 A simple start page containing a company logo, bookmark icons, and a search bar
 
 ## How to Use
-Once the space has been imported, start a session and it will open automatically. 
+Open a space session and add a new extension throuhg the settings menu. Once the extension has been added, starting a session will open the start page automatically. 
 
 You can modify the color scheme and the company logo on the page in the extensions variables menu. Inside a session, click "Extensions" in the tool bar. Select the extension, update the values as per the instructions below each and click save. 
 
