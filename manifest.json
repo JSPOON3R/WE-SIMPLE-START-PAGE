@@ -9,12 +9,12 @@
     {
       "key": "primaryColor",
       "value": "#007AA3",
-      "description": "Enter a hex code for your primary color"
+      "description": "Enter a color by name (e.g. red, blue, green) or a hex code (e.g. #007AA3)"
     },
     {
       "key": "secondaryColor",
       "value": "#00BCEB",
-      "description": "Enter a hex code for your secondary color"
+      "description": "Enter a color by name (e.g. red, blue, green) or a hex code (e.g. #00BCEB)"
     },
     {
       "key": "CompanyLogoURL",
