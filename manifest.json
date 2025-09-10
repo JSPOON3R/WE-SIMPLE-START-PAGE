@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Simple Start Page Extension",
+  "version": "3.0",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "env": [
+    {
+      "key": "primaryColor",
+      "value": "#007AA3",
+      "description": "Enter a hex code for your primary color"
+    },
+    {
+      "key": "secondaryColor",
+      "value": "#00BCEB",
+      "description": "Enter a hex code for your secondary color"
+    },
+    {
+      "key": "CompanyLogoURL",
+      "value": "https://dev.webfuse.com/_astro/webfuse-black.BHtSVUJl.svg",
+      "description": "Enter a URL that points to your company logo"
+    }
+  ]
+}

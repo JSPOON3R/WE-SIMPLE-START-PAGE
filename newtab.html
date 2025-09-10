@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Webfuse for Webex — Launcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: "";
+            --secondary-color: "";
+            --company-logo: "";
+            --font: 'Roboto', sans-serif;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            background-image: url('src/radiant-gradient.svg') !important;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-position-y: bottom !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: min(1100px, 92vw);
+            height: 100vh;
+            margin: 28px auto 48px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        /* Header */
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand img {
+            height: 100px;
+            width: auto;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .brand .title {
+            font-weight: 300;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            letter-spacing: .2px;
+        }
+
+        .btn-container {
+            Display: flex;
+            gap: 10px;
+        }
+
+        /* Search bar */
+        .search {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            background: white;
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+            margin: 10px 0 24px;
+        }
+
+        .search input[type="search"] {
+            border: 1px solid var(--secondary-color);
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .search button {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px;
+            border: 1px solid var(--secondary-color);
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+
+        .search button:hover {
+            background-color: var(--secondary-color);
+            color: gray;
+            border: 1px solid gray;
+        }
+
+        .search button:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px
+        }
+
+        /* Bookmarks grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: white;
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: inherit;
+            opacity: .9;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+            transition: transform .06s ease, box-shadow .12s ease, border-color .12s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+            border-color: #ddd;
+        }
+
+        .card .badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: .9rem;
+            background: white;;
+        }
+
+        .card .label {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+        }
+
+        .card .label .name {
+            font-weight: 600;
+        }
+
+        .card .label .desc {
+            font-size: .9rem;
+            color: #666;
+        }
+
+        /* Footer note (optional) */
+        .note {
+            margin-top: 18px;
+            font-size: .85rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        @media (max-width:520px) {
+            .brand img {
+                height: 44px
+            }
+
+            header {
+                margin-bottom: 20px;
+                margin-top: 20px;
+            }
+
+            .search {
+                grid-template-columns: 1fr;
+                padding: 8px
+            }
+
+            .search button {
+                width: 100%
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container" role="main">
+        <!-- Logo / header -->
+        <header class="brand" aria-label="Company Logo">
+            <img id="company-logo" src="" alt="Webex logo">
+            <div class="title">Select or Search</div>
+        </header>
+
+        <!-- Bookmarks -->
+        <section aria-labelledby="quick-links">
+            <h2 id="quick-links" class="visually-hidden" style="position:absolute;left:-9999px;">Quick links</h2>
+            <div class="grid">
+                <a class="card" href="https://www.amazon.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/amazon-icon.webp" alt="Amazon" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">Amazon</span>
+                        <span class="desc">amazon.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.facebook.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/facebook-logo.png" alt="Facebook" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">Facebook</span>
+                        <span class="desc">facebook.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.google.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/google-logo.png" alt="Google" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">Google</span>
+                        <span class="desc">google.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.instagram.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/instagram-icon.png" alt="Instagram" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">Instagram</span>
+                        <span class="desc">instagram.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.linkedin.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/linkedin-icon.png" alt="LinkedIn" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">LinkedIn</span>
+                        <span class="desc">linkedin.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.reddit.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/reddit-icon.webp" alt="Reddit" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">Reddit</span>
+                        <span class="desc">reddit.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.youtube.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/youtube-logo.png" alt="YouTube" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">YouTube</span>
+                        <span class="desc">youtube.com</span>
+                    </span>
+                </a>
+
+                <a class="card" href="https://www.x.com/" target="_blank" rel="noopener">
+                    <span class="badge">
+                        <img src="src/x-icon.png" alt="X (Twitter)" style="width:28px;height:auto;display:block;">
+                    </span>
+                    <span class="label">
+                        <span class="name">X (Twitter)</span>
+                        <span class="desc">x.com</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+        <form class="search" action="https://www.bing.com/search" method="GET" target="_blank" role="search"
+            aria-label="Search the web">
+            <input type="search" name="q" placeholder="Search the web…" autocomplete="on" />
+            <div class="btn-container">
+                <button type="submit" aria-label="Search the web">Search</button>
+                <button id="shareFile" type="button" aria-label="Upload file">Upload a file</button>
+            </div>
+        </form>
+
+        <p class="note">Custom Start Page Demo</p>
+    </main>
+</body>
+<script>
+    //fetch variables from manifest.json into page
+    document.addEventListener('DOMContentLoaded', () => {
+        if (browser && browser.webfuseSession && browser.webfuseSession.env) {
+            const env = browser.webfuseSession.env;
+
+            // Update CSS variables
+            document.documentElement.style.setProperty('--primary-color', env.primaryColor);
+            document.documentElement.style.setProperty('--secondary-color', env.secondaryColor);
+
+            // Update company logo
+            const logoElement = document.getElementById('company-logo');
+            if (logoElement && env.CompanyLogoURL) {
+                logoElement.src = env.CompanyLogoURL;
+            }
+        } else {
+            console.error('Webfuse environment data is not available.');
+        }
+    });
+
+    //File share button
+    document.getElementById("shareFile")
+        .addEventListener("click", () => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "*/*";
+            input.onchange = e => browser.webfuseSession.apiRequest({
+                cmd: "upload_file",
+                file: e.target.files[0]
+            });
+            input.click();
+        });
+
+</script>
+
+</html>
