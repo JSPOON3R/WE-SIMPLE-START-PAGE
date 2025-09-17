@@ -1,6 +1,6 @@
 
 ## Description
-A simple start page containing a company logo, bookmark icons, and a search bar
+A simple start page containing a company logo, bookmark icons, and a search bar. This demo page makes extensive use of extension variables to allow customisation. 
 
 ## How to Use
 Open a space session and add a new extension throuhg the settings menu. Once the extension has been added, starting a session will open the start page automatically. 
