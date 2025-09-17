@@ -11,19 +11,24 @@
       "value": "default",
       "description": "Enter a URL for the background image or use default"
     },
-        {
+    {
       "key": "CompanyLogoURL",
-      "value": "https://dev.webfuse.com/_astro/webfuse-black.BHtSVUJl.svg",
+      "value": "default",
       "description": "Enter a URL that points to your company logo"
     },
     {
+      "key": "SubjectLine",
+      "value": "Select or Search",
+      "description": "Enter a phrase or leave empty"
+    },
+    {
       "key": "primaryColor",
-      "value": "#007AA3",
+      "value": "#07255F",
       "description": "Enter a color by name (e.g. red, blue, green) or a hex code (e.g. #007AA3)"
     },
     {
       "key": "secondaryColor",
-      "value": "#add8e6",
+      "value": "steelblue",
       "description": "Enter a color by name (e.g. red, blue, green) or a hex code (e.g. #00BCEB)"
     },
     {
@@ -31,7 +36,6 @@
       "value": "default",
       "description": "The page URL you want this card to link to. Use default to keep original"
     },
-
     {
       "key": "bookmarkURL_2",
       "value": "default",
