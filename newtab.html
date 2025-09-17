@@ -67,7 +67,7 @@
             font-size: 1.5rem;
             color: var(--primary-color);
             letter-spacing: .2px;
-            margin-bottom: 8px;
+            margin-bottom: 25px;
         }
 
         .btn-container {
@@ -100,7 +100,7 @@
 
         .search button {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--secondary-color);
             border-radius: 15px;
             border: 1px solid var(--secondary-color);
             padding: 8px 16px;
@@ -115,7 +115,7 @@
 
         .search button:hover {
             background-color: var(--secondary-color);
-            color: gray;
+            color: var(--primary-color);
             border: 1px solid gray;
         }
 
@@ -137,7 +137,7 @@
             gap: 12px;
             padding: 14px;
             background: white;
-            border: 1px solid var(--secondary-color);
+            border: 1px solid transparent;
             border-radius: var(--radius);
             text-decoration: none;
             color: inherit;
@@ -149,7 +149,7 @@
         .card:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
-            border-color: #ddd;
+            border: 1px solid var(--primary-color);
         }
 
         .card .badge {
@@ -165,6 +165,29 @@
             ;
         }
 
+        .card .badge.link-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            /* opaque circle */
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+        }
+
+        .card .badge.link-badge::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            display: block;
+            background: var(--primary-color);
+            /* tint color */
+            -webkit-mask: url('src/link.png') center/contain no-repeat;
+            /* mask PNG */
+            mask: url('src/link.png') center/contain no-repeat;
+        }
+
         .card .label {
             display: flex;
             flex-direction: column;
@@ -173,6 +196,7 @@
 
         .card .label .name {
             font-weight: 600;
+            color: var(--primary-color);
         }
 
         .card .label .desc {
@@ -183,8 +207,13 @@
         /* Footer note (optional) */
         .note {
             margin-top: 18px;
+            width: 250px;
             font-size: .85rem;
-            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 6px 12px;
+            align-self: center;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             text-align: center;
         }
 
@@ -318,26 +347,144 @@
     </main>
 </body>
 <script>
-    //fetch variables from manifest.json into page
+    // fetch variables from manifest.json into page
     document.addEventListener('DOMContentLoaded', () => {
         if (browser && browser.webfuseSession && browser.webfuseSession.env) {
             const env = browser.webfuseSession.env;
 
-            // Update CSS variables
-            document.documentElement.style.setProperty('--primary-color', env.primaryColor);
-            document.documentElement.style.setProperty('--secondary-color', env.secondaryColor);
+            // ---------------- helpers ----------------
+            const isUnset = (val) => !val || String(val).trim() === '' || String(val).toLowerCase().trim() === 'default';
 
-            // Update company logo
+            // Accepts http(s) URLs OR bare domains like "example.com"
+            const isLikelyUrl = (val) => {
+                if (!val || typeof val !== 'string') return false;
+                const s = val.trim();
+                return /^https?:\/\//i.test(s) || /^[\w-]+(\.[\w-]+)+/i.test(s);
+            };
+
+            // If no scheme, prepend https://
+            const normalizeUrl = (val) => {
+                const s = String(val).trim();
+                if (/^https?:\/\//i.test(s)) return s;
+                if (/^[\w-]+(\.[\w-]+)+/i.test(s)) return `https://${s}`;
+                return s;
+            };
+
+            // Host helpers
+            const hostnameFromUrl = (urlStr) => {
+                try { return new URL(normalizeUrl(urlStr)).hostname.toLowerCase(); } catch { return ''; }
+            };
+            const baseDomain = (host) => {
+                if (!host) return '';
+                let h = host.toLowerCase();
+                if (h.startsWith('www.')) h = h.slice(4);
+                const parts = h.split('.').filter(Boolean);
+                if (parts.length >= 2) return `${parts[parts.length - 2]}.${parts[parts.length - 1]}`;
+                return h;
+            };
+            const displayNameFromHost = (host) => {
+                const base = baseDomain(host);
+                const sld = base.split('.')[0] || '';
+                return sld ? sld.charAt(0).toUpperCase() + sld.slice(1) : host;
+            };
+
+            // Set badge to CSS link icon (circle secondary, masked link.png primary)
+            const setBadgeToLinkIcon = (badge) => {
+                const img = badge.querySelector('img');
+                if (img) img.remove();
+                badge.classList.add('link-badge');
+            };
+
+            // Ensure badge uses an <img> with given src, creating if needed
+            const setBadgeImage = (badge, src, altText) => {
+                let img = badge.querySelector('img');
+                if (!img) {
+                    img = document.createElement('img');
+                    img.alt = altText || 'Icon';
+                    img.style.width = '28px';
+                    img.style.height = 'auto';
+                    img.style.display = 'block';
+                    badge.appendChild(img);
+                }
+                img.src = src;
+                badge.classList.remove('link-badge');
+                return img;
+            };
+
+            // Try favicon chain: site /favicon.ico -> Google s2 -> fallback to link icon
+            const applyFavicon = (badge, host, altText) => {
+                const tryLoad = (url) => new Promise((resolve, reject) => {
+                    const testImg = new Image();
+                    testImg.onload = () => resolve(url);
+                    testImg.onerror = reject;
+                    testImg.referrerPolicy = 'no-referrer';
+                    testImg.src = url;
+                });
+
+                const siteFavicon = `https://${host}/favicon.ico`;
+                const googleFavicon = `https://www.google.com/s2/favicons?domain=${host}&sz=64`;
+
+                // Chain attempts
+                tryLoad(siteFavicon)
+                    .then((okUrl) => setBadgeImage(badge, okUrl, altText))
+                    .catch(() => tryLoad(googleFavicon)
+                        .then((okUrl) => setBadgeImage(badge, okUrl, altText))
+                        .catch(() => setBadgeToLinkIcon(badge)));
+            };
+
+            // ---------------- CSS variables ----------------
+            if (env.primaryColor) document.documentElement.style.setProperty('--primary-color', env.primaryColor);
+            if (env.secondaryColor) document.documentElement.style.setProperty('--secondary-color', env.secondaryColor);
+
+            // ---------------- Company logo ----------------
             const logoElement = document.getElementById('company-logo');
             if (logoElement && env.CompanyLogoURL) {
                 logoElement.src = env.CompanyLogoURL;
+            }
+
+            // ---------------- Optional background override ----------------
+            if (!isUnset(env.BackgroundImgURL) && isLikelyUrl(env.BackgroundImgURL)) {
+                document.body.style.setProperty('background-image', `url('${normalizeUrl(env.BackgroundImgURL)}')`, 'important');
+            }
+
+            // ---------------- Bookmarks (bookmarkURL_X only) ----------------
+            const cards = document.querySelectorAll('.grid .card');
+            const badges = document.querySelectorAll('.grid .card .badge');
+
+            for (let i = 0; i < cards.length && i < 8; i++) {
+                const card = cards[i];
+                const badge = badges[i];
+                if (!card || !badge) continue;
+
+                const nameEl = card.querySelector('.label .name');
+                const descEl = card.querySelector('.label .desc');
+
+                const idx = i + 1;
+                const bookmarkURL = env[`bookmarkURL_${idx}`];
+
+                // If bookmarkURL is provided (and not default), update card link + labels + icon
+                if (!isUnset(bookmarkURL) && isLikelyUrl(bookmarkURL)) {
+                    const normalized = normalizeUrl(bookmarkURL);
+                    const host = hostnameFromUrl(normalized);
+                    const name = displayNameFromHost(host);
+                    const desc = baseDomain(host);
+
+                    // Update link, title, desc
+                    card.setAttribute('href', normalized);
+                    if (nameEl && name) nameEl.textContent = name;
+                    if (descEl && desc) descEl.textContent = desc;
+
+                    // Icon: try favicon(s); if none load, fallback to CSS link icon
+                    applyFavicon(badge, host, name || 'Favicon');
+                }
+                // else: keep related card exactly as-is
             }
         } else {
             console.error('Webfuse environment data is not available.');
         }
     });
 
-    //File share button
+    // File share button
     document.getElementById("shareFile")
         .addEventListener("click", () => {
             const input = document.createElement("input");
@@ -354,7 +501,6 @@
     document.getElementById("shareScreen").addEventListener("click", () => {
         browser.webfuseSession.startScreensharing();
     });
-
 </script>
 
 </html>
